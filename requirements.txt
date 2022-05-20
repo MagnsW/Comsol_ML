@@ -1,0 +1,9 @@
+matplotlib
+pandas
+numpy
+scipy
+seaborn
+jupyter
+sklearn
+tensorflow
+acoustics
