@@ -7,3 +7,5 @@ jupyter
 sklearn
 tensorflow
 acoustics
+pydot
+graphviz
