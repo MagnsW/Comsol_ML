@@ -33,7 +33,7 @@ def tx_fk_plot(traces, dt, dx, title, log=True, minfreq=0, maxfreq=150, dbdown=-
     fk = fft.fftshift(fft.fft2(traces, s=[nt, nx]))
 
     sns.set_style("white")
-    plt.figure(figsize=(6, 4))
+    plt.figure(figsize=(12, 8))
     plt.subplot(1, 2, 1)
     plt.pcolormesh(np.arange(1, nx_native+1), t_array*1e6, traces, cmap='gray')
     plt.gca().invert_yaxis()
