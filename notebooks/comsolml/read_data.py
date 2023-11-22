@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 import scipy
+import mat73
 
 
 def read_waveforms(pathname, longname=True):
@@ -32,7 +33,10 @@ def read_synth(filename, header, firsttrace=0, decim=6, geom_spread=True):
     :param geom_spread:
     :return:
     '''
-    mat = scipy.io.loadmat(filename)
+    try:
+        mat = mat73.loadmat(filename)
+    except:
+        mat = scipy.io.loadmat(filename)
     X = mat[header].astype('float32')
     X = np.swapaxes(X, 2, 1)
     X = X[:,:-1,:] #Removes repeated trace

@@ -1,6 +1,7 @@
 import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dropout
 #from tensorflow.keras import layers
 from tensorflow import keras
 import keras.layers
@@ -27,7 +28,7 @@ def make_autoencoder(input_dim, encoding_dim, activation):
 
     return autoencoder, encoder
 
-def make_regression_model(input_dim, activation):
+def make_regression_model(input_dim, activation, dropoutrate=None):
     add_another = True
     if input_dim > 64:
         next_dim = 64
@@ -41,6 +42,8 @@ def make_regression_model(input_dim, activation):
         while add_another:
             model.add(Dense(next_dim))
             model.add(LeakyReLU())
+            if dropout:
+                model.add(Dropout(dropoutrate))
             next_dim = int(np.floor(next_dim/2))
             print(f"Layer added; size: {next_dim}")
             if next_dim <= 2:
@@ -51,6 +54,8 @@ def make_regression_model(input_dim, activation):
         #model.add(Dense(input_dim, activation=activation))
         while add_another:
             model.add(Dense(next_dim, activation=activation))
+            if dropoutrate:
+                model.add(Dropout(dropoutrate))
             next_dim = int(np.floor(next_dim/2))
             print(f"Layer added; size: {next_dim}")
             if next_dim <= 2:
@@ -76,9 +81,9 @@ def do_regression(X_sample, label_sample, attributes):
                                                                                  random_state=42)
         x_reg_train_flat = x_reg_train.reshape((len(x_reg_train), np.prod(x_reg_train.shape[1:])))
         x_reg_test_flat = x_reg_test.reshape((len(x_reg_test), np.prod(x_reg_test.shape[1:])))
-        regression_model = make_regression_model(x_reg_train_flat.shape[1], 'tanh')
+        regression_model = make_regression_model(x_reg_train_flat.shape[1], 'tanh', None)
         # direct_regression_model = make_direct_regressor()
-        regression_model.compile(loss='mae', optimizer='adam')
+        regression_model.compile(loss='mae', optimizer=keras.optimizers.Adam())
         history = regression_model.fit(x_reg_train_flat, y_reg_train.astype('float32'),
                                               epochs=50,
                                               batch_size=20,
